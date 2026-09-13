@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Trading Research Assistant
 
-## Getting Started
+This is a prototype web application designed to help traders convert their natural language trading ideas into structured experiments. Built as part of a technical assignment.
 
-First, run the development server:
+## Overview
+The assistant takes a natural language query (e.g., "Does buying NIFTY after a sharp fall work?"), extracts key trading parameters using an LLM, and handles ambiguity by asking the user to clarify any missing fields (like Exit condition or exact Entry Magnitude). Once all fields are gathered, it outputs a clean, structured JSON experiment.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Architecture & Technologies
+- **Framework:** Next.js (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS + Lucide Icons
+- **AI Integration:** Google Gemini API (`gemini-3.6-flash`) using `@google/genai`
+- **State Management:** React `useState` (Client-side)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Key Decisions
+1. **Single Combined Clarification Form:** Instead of asking for missing fields sequentially (which requires multiple LLM calls and slows down the user), the system identifies *all* missing required fields at once and presents a single clarification form.
+2. **Client-Side State Merging:** Once the initial AI parsing is done, missing field clarifications are merged directly in the React state. We do *not* make a second expensive/slow LLM call to merge the data.
+3. **Structured Outputs (Native Schema):** We use Gemini's native `responseSchema` to strictly enforce the JSON structure rather than relying solely on prompt engineering. This guarantees we get exactly the keys we expect without parsing errors.
+4. **Vague Entry Detection:** The prompt strictly rejects qualitative words like "sharp fall" without a numeric threshold, forcing it to `null` so the UI explicitly asks the user for a quantifiable number.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## What I'd Improve with More Time
+- **Real Backtesting Engine Integration:** The current "Run Backtest" button returns mock data. I would connect the structured JSON output to a Python backend running `Backtrader` or `pandas` for real historical testing.
+- **Conversational Memory:** Allow the user to say "Change the timeframe to 5min" after the initial result, rather than starting from scratch.
+- **Persistent Storage:** Save previous experiments to a database (e.g., PostgreSQL or Firebase) so users can review their past trading ideas.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Setup Instructions
+1. Clone the repository.
+2. Run `npm install`.
+3. Create a `.env.local` file in the root and add your Gemini API key:
+   `GEMINI_API_KEY=your_key_here`
+4. Run `npm run dev` and open `http://localhost:3000`.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Demo
+A short demo video of the complete user journey is provided with the submission, showing:
+- Clear input parsing
+- Ambiguous input handling (clarification form)
+- Irrelevant query rejection
+- Bonus: Mock backtest execution
