@@ -4,7 +4,7 @@ As required by the assignment brief, here is a transparent breakdown of how AI t
 
 ## Tools Used
 - **ChatGPT**
-- **Anthropic Claude 3.5 Sonnet**
+- **Claude**
 - **Google Gemini**
 
 ## How They Were Used
