@@ -4,6 +4,8 @@ This is a prototype web application designed to help traders convert their natur
 
 ## Overview
 The assistant takes a natural language query (e.g., "Does buying NIFTY after a sharp fall work?"), extracts key trading parameters using an LLM, and handles ambiguity by asking the user to clarify any missing fields (like Exit condition or exact Entry Magnitude). Once all fields are gathered, it outputs a clean, structured JSON experiment.
+## AI Tools Used
+This project was built with the assistance of Claude, ChatGPT, and Google Gemini — used for architecture brainstorming, UI scaffolding, and prompt/schema drafting respectively. See `AI_USAGE_NOTE.md` for a detailed breakdown of what was AI-generated vs. personally designed, reviewed, or modified.
 
 ## Architecture & Technologies
 - **Framework:** Next.js (App Router)
